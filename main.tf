@@ -13,8 +13,9 @@ resource "azurerm_resource_group" "aks-cluster-rg" {
 
 # Log analytics for Container monitoring
 resource "random_id" "log_analytics_workspace_name_suffix" {
-    byte_length = 8
+    byte_length = 6
 }
+
 resource "azurerm_log_analytics_workspace" "aks-log-wspace" {
   # The WorkSpace name has to be unique across the whole of azure, not just the current subscription/tenant.
   name                = "${var.aks_name}-workspace-${random_id.log_analytics_workspace_name_suffix.dec}"
@@ -47,13 +48,15 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
   node_resource_group = "${var.resource_group_name}-node"
 
   default_node_pool {
-    name                = var.nodepool_name
-    type                = var.nodepool_type
-    vm_size             = var.node_size
-    enable_auto_scaling = var.node_auto_scale
-    node_count          = var.node_auto_scale == false ? var.node_count : null
-    max_count           = var.node_auto_scale == true ? var.node_max_count : null
-    min_count           = var.node_auto_scale == true ? var.node_min_count : null
+    name                  = var.nodepool_name
+    type                  = var.nodepool_type
+    vm_size               = var.node_size
+    enable_node_public_ip = var.node_public_ip
+    enable_auto_scaling   = var.node_auto_scale
+    node_count            = var.node_auto_scale == false ? var.node_count : null
+    max_count             = var.node_auto_scale == true ? var.node_max_count : null
+    min_count             = var.node_auto_scale == true ? var.node_min_count : null
+    max_pods              = var.node_max_pods
   }
 
   identity {
@@ -63,7 +66,15 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
   # Network
   network_profile {
     load_balancer_sku = "Standard"
-    network_plugin = "kubenet"
+    outbound_type     = "loadBalancer"
+    network_plugin    = "kubenet"
+    # Other option will be default value from terraform
+    # network_policy     = var.network_policy
+    # dns_service_ip     = var.net_profile_dns_service_ip
+    # docker_bridge_cidr = var.net_profile_docker_bridge_cidr
+    # outbound_type      = var.net_profile_outbound_type
+    # pod_cidr           = var.net_profile_pod_cidr
+    # service_cidr       = var.net_profile_service_cidr
   }
 
   # Addon
@@ -71,6 +82,10 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
     oms_agent {
       enabled = true
       log_analytics_workspace_id = azurerm_log_analytics_workspace.aks-log-wspace.id
+    }
+
+    http_application_routing {
+      enabled = var.enable_http_application_routing
     }
   }
 

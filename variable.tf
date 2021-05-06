@@ -12,7 +12,7 @@ variable "aks_name" {
 }
 
 variable "kubernetes_version" {
-  default = "1.16"
+  default = "1.16.1"
   description = "K8s version"
 }
 
@@ -30,8 +30,15 @@ variable "nodepool_type" {
   description = "Name for nodepool that will contain all nodes"
 }
 
+variable "node_public_ip" {
+  default     = false
+  type        = bool
+  description = "Public IP configuration for each node to access it from internet"
+}
+
 variable "node_count" {
-  default     = "1"
+  default     = 1
+  type        = number
   description = "Total node for nodepool"
 }
 
@@ -41,19 +48,33 @@ variable "node_size" {
 }
 
 variable "node_auto_scale" {
+  type        = bool
   description = "Node autoscaling"
 }
 
 variable "node_min_count" {
   default     = 1
+  type        = number
   description = "Node min count with autoscaling on"
 }
 
 variable "node_max_count" {
   default     = 2
+  type        = number
   description = "Node max count with autoscaling on"
 }
 
-variable log_analytics_workspace_sku {
-    default = "PerGB2018"
+variable "node_max_pods" {
+  default     = null
+  type        = number
+  description = "Max pod on each node"
+}
+
+variable "log_analytics_workspace_sku" {
+  default = "PerGB2018"
+}
+
+variable "enable_http_application_routing" {
+  default     = false
+  description = "Enable http application routing"
 }
