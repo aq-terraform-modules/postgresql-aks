@@ -41,6 +41,7 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
   location            = var.location
   resource_group_name = azurerm_resource_group.aks-cluster-rg.name
   dns_prefix          = "${var.aks_name}-dns"
+  kubernetes_version  = var.kubernetes_version
 
   #  Resource group for node
   node_resource_group = "${var.resource_group_name}-node"
@@ -70,10 +71,6 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
     oms_agent {
       enabled = true
       log_analytics_workspace_id = azurerm_log_analytics_workspace.aks-log-wspace.id
-    }
-
-    kube_dashboard {
-      enabled = true
     }
   }
 

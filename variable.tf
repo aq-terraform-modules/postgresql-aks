@@ -11,6 +11,11 @@ variable "aks_name" {
   description = "Name for logic app"
 }
 
+variable "kubernetes_version" {
+  default = "latest"
+  description = "K8s version"
+}
+
 variable "tag_env" {
   description = "Environment tag"
 }
