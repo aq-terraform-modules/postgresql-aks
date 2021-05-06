@@ -1,16 +1,33 @@
-resource "azurerm_resource_group" "aks-rg" {
-  name      = var.resource_group_name
+resource "azurerm_resource_group" "aks-cluster-rg" {
+  name      = "${var.resource_group_name}-cluster"
   location  = var.location
+
+  tags = {
+    Environment = "Development"
+  }
 
   lifecycle {
     ignore_changes  = [tags]
   }
 }
 
-resource "azurerm_kubernetes_cluster" "example" {
+resource "azurerm_resource_group" "aks-node-rg" {
+  name      = "${var.resource_group_name}-node"
+  location  = var.location
+
+  tags = {
+    Environment = "Development"
+  }
+
+  lifecycle {
+    ignore_changes  = [tags]
+  }
+}
+
+resource "azurerm_kubernetes_cluster" "aks-cluster" {
   name                = "${var.aks_name}-cluster"
   location            = var.location
-  resource_group_name = azurerm_resource_group.aks-rg.name
+  resource_group_name = azurerm_resource_group.aks-cluster-rg.name
   dns_prefix          = "${var.aks_name}-dns"
 
   default_node_pool {
@@ -22,6 +39,9 @@ resource "azurerm_kubernetes_cluster" "example" {
   identity {
     type = "SystemAssigned"
   }
+
+  #  Resource group for node
+  node_resource_group = azurerm_resource_group.aks-node-rg.name
 
   tags = {
     Environment = "Development"
