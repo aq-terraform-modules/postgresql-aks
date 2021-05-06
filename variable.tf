@@ -12,7 +12,7 @@ variable "aks_name" {
 }
 
 variable "kubernetes_version" {
-  default = "latest"
+  default = "1.16"
   description = "K8s version"
 }
 
