@@ -11,19 +11,6 @@ resource "azurerm_resource_group" "aks-cluster-rg" {
   }
 }
 
-resource "azurerm_resource_group" "aks-node-rg" {
-  name      = "${var.resource_group_name}-node"
-  location  = var.location
-
-  tags = {
-    Environment = "Development"
-  }
-
-  lifecycle {
-    ignore_changes  = [tags]
-  }
-}
-
 resource "azurerm_kubernetes_cluster" "aks-cluster" {
   name                = "${var.aks_name}-cluster"
   location            = var.location
@@ -41,8 +28,8 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
   }
 
   #  Resource group for node
-  node_resource_group = azurerm_resource_group.aks-node-rg.name
-
+  node_resource_group = "${var.resource_group_name}-node"
+  
   tags = {
     Environment = "Development"
   }
