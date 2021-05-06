@@ -12,6 +12,9 @@ resource "azurerm_resource_group" "aks-cluster-rg" {
 }
 
 # Log analytics for Container monitoring
+resource "random_id" "log_analytics_workspace_name_suffix" {
+    byte_length = 8
+}
 resource "azurerm_log_analytics_workspace" "aks-log-wspace" {
   # The WorkSpace name has to be unique across the whole of azure, not just the current subscription/tenant.
   name                = "${var.aks_name}-workspace-${random_id.log_analytics_workspace_name_suffix.dec}"
