@@ -47,9 +47,9 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
     type                = var.nodepool_type
     vm_size             = var.node_size
     enable_auto_scaling = var.node_auto_scale
-    node_count          = ${var.node_auto_scale == false ? var.node_count : 1}
-    max_count           = ${var.node_auto_scale == true ? var.node_max_count : 1}
-    min_count           = ${var.node_auto_scale == true ? var.node_min_count : 1}
+    node_count          = ${var.node_auto_scale == false ? 0 : 1}
+    max_count           = ${var.node_auto_scale == true ? 0 : 1}
+    min_count           = ${var.node_auto_scale == true ? 0 : 1}
   }
 
   identity {
