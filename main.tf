@@ -60,6 +60,7 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
     name                  = var.nodepool_name
     type                  = var.nodepool_type
     vm_size               = var.node_size
+    # Enable public access to node for troubleshooting
     enable_node_public_ip = var.node_public_ip
     enable_auto_scaling   = var.node_auto_scale
     node_count            = var.node_auto_scale == false ? var.node_count : null
@@ -77,7 +78,7 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
     load_balancer_sku = "Standard"
     outbound_type     = "loadBalancer"
     network_plugin    = "kubenet"
-    # Other option will be default value from terraform
+    # Other option will be default value from terraform, if you want to use, please define these values in variable.tf and set the default value or set value from workspace
     # network_policy     = var.network_policy
     # dns_service_ip     = var.net_profile_dns_service_ip
     # docker_bridge_cidr = var.net_profile_docker_bridge_cidr

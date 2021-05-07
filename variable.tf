@@ -59,6 +59,7 @@ variable "node_size" {
 }
 
 variable "node_auto_scale" {
+  default     = false
   type        = bool
   description = "Node autoscaling"
 }
