@@ -47,6 +47,15 @@ resource "azurerm_kubernetes_cluster" "aks-cluster" {
   #  Resource group for node
   node_resource_group = "${var.resource_group_name}-node"
 
+  
+  linux_profile {
+    admin_username = var.admin_username
+
+    ssh_key {
+      key_data = var.public_ssh_key
+    }
+  }
+
   default_node_pool {
     name                  = var.nodepool_name
     type                  = var.nodepool_type

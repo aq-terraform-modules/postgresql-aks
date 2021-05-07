@@ -16,6 +16,17 @@ variable "kubernetes_version" {
   description = "K8s version"
 }
 
+variable "admin_username" {
+  default     = "remote_admin"
+  type        = string
+  description = "Username for node"
+}
+
+variable "public_ssh_key" {
+  type        = string
+  description = "Public key to login using private key pem"
+}
+
 variable "tag_env" {
   description = "Environment tag"
 }
